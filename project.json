@@ -1,0 +1,96 @@
+{
+  "slug": "rift",
+  "name": "Rifty",
+  "symbol": "RIFT",
+  "master": "EQBvpKspmZ6Wk6Hc9VZptfHdh2HPoWFVTQi9oZEIcXl3_5kr",
+  "decimals": 9,
+  "github": {
+    "owner": "Freebielife",
+    "repo": "RIFT"
+  },
+  "pools": [
+    {
+      "address": "EQDjATfeG1bF8gQSsyCWSZCNW4M-iGQ-26paGU-L4SUmTagP",
+      "dex": "stonfi",
+      "quote": "TON",
+      "evidence": "https://tonapi.io/v2/accounts/EQDjATfeG1bF8gQSsyCWSZCNW4M-iGQ-26paGU-L4SUmTagP/events?limit=100"
+    }
+  ],
+  "primary_pool": "EQDjATfeG1bF8gQSsyCWSZCNW4M-iGQ-26paGU-L4SUmTagP",
+  "links": {
+    "website": "https://rifty.run.place/",
+    "telegram": "https://t.me/riftycommunity"
+  },
+  "services": {
+    "UQD4uGNdB4a3f52mYOZf0x1nCmdd1DAvrLppL0a1cetTYCQx": "Binance",
+    "EQDPfqI17W9lF-3OmAJu92GOn22BoTMdTmW6cY4s0V-ArRRY": "Bybit"
+  },
+  "engine_version": "1.3.0",
+  "discovery": {
+    "checkedAt": 1795462138,
+    "sources": [
+      "https://tonapi.io/v2/jettons/EQBvpKspmZ6Wk6Hc9VZptfHdh2HPoWFVTQi9oZEIcXl3_5kr",
+      "https://api.geckoterminal.com/api/v2/networks/ton/tokens/EQBvpKspmZ6Wk6Hc9VZptfHdh2HPoWFVTQi9oZEIcXl3_5kr/pools?page=1"
+    ],
+    "primaryPoolPolicy": "largest indexed USD liquidity among swap-verified supported TON pools"
+  },
+  "project_description": {
+    "text": "RIFT powers Rifty Mining on TON: mining rewards, station upgrades and module crafting, with a mintable supply and no fixed maximum.",
+    "origin": "token_metadata",
+    "sources": [
+      "https://tonapi.io/v2/jettons/EQBvpKspmZ6Wk6Hc9VZptfHdh2HPoWFVTQi9oZEIcXl3_5kr"
+    ],
+    "checked_at": "2026-11-23"
+  },
+  "logo_file": "web/project-logo.webp",
+  "logo_origin": "token_metadata",
+  "logo_source": "https://rifty.run.place/assets/rift-token-v1.jpg",
+  "flag_file": "web/project-flag.webp",
+  "flag_source": "User supplied image, explicitly approved for both hero and section flags",
+  "branding_override": {
+    "reason": "User explicitly requested the attachment for both logo and flag",
+    "attachment": "image(20261123-191131).png"
+  },
+  "service_provenance": {
+    "0:f8b8635d0786b77f9da660e65fd31d670a675dd4302facba692f46b571eb5360": {
+      "category": "custody",
+      "source": "User-provided attribution, 2026-11-22; ownership not independently verified"
+    },
+    "0:cf7ea235ed6f6517edce98026ef7618e9f6d81a1331d4e65ba718e2cd15f80ad": {
+      "category": "custody",
+      "source": "User-provided attribution, 2026-11-22; ownership not independently verified"
+    }
+  },
+  "template_repository": "Freebielife/TON-Observatory-Template",
+  "max_html_bytes": 2500000,
+  "ui": {
+    "holders_initial": 10,
+    "holders_expanded": 20
+  },
+  "methodology": {
+    "valuation": "last observed swap in primary_pool times CURRENT total supply; not circulating market cap",
+    "primary_pool": "EQDjATfeG1bF8gQSsyCWSZCNW4M-iGQ-26paGU-L4SUmTagP",
+    "sellers": "sum of successful supported native TON swap sales; service roles excluded",
+    "holders": "balances excluding known services and identified contracts; unclassified accounts may remain until verified",
+    "burns": "accepted burn notifications and zero-address transfers shown as distinct evidence",
+    "usd": "historical TON/USD rate from CoinGecko",
+    "history": "incremental confirmed swaps; missing intervals remain partial"
+  },
+  "branding": {
+    "hero": {
+      "origin": "token_metadata",
+      "source": "https://rifty.run.place/assets/rift-token-v1.jpg",
+      "file": "web/project-logo.webp"
+    },
+    "sectionFlag": {
+      "source": "User supplied image, explicitly approved for both hero and section flags",
+      "catalogueKey": null,
+      "emoji": null,
+      "file": "web/project-flag.webp"
+    },
+    "channel": "https://t.me/riftycommunity"
+  },
+  "additional_links": {
+    "bot": "https://t.me/riftycoinbot"
+  }
+}
