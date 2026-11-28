@@ -33,7 +33,29 @@ if (WEB / "project-background.webp").exists():
         (WEB / "project-background.webp").read_bytes()).decode("ascii")
 template = template.replace("__PROJECT_ART__", art).replace("__PROJECT_BG__", background)
 snapshot = json.loads((ROOT / "data/snapshot.json").read_text())
-payload = json.dumps(snapshot, ensure_ascii=False, separators=(",", ":")).replace("<", r"\u003c")
+# Pack homogeneous transaction rows without dropping any field or record.
+import copy
+embedded = copy.deepcopy(snapshot)
+for key in ("trades", "burns"):
+    part = embedded.get(key, {})
+    rows = part.get("rows", [])
+    if rows and all(isinstance(row, dict) and row.keys() == rows[0].keys() for row in rows):
+        keys = list(rows[0])
+        part["_packedRows"] = {"keys": keys, "rows": [[row[k] for k in keys] for row in rows]}
+        del part["rows"]
+decoder = """function unpackEmbeddedSnapshot(s){
+for(const key of ['trades','burns']){
+ const part=s[key], p=part?._packedRows;
+ if(p){part.rows=p.rows.map(row=>Object.fromEntries(p.keys.map((k,i)=>[k,row[i]])));delete part._packedRows;}
+}
+return s;
+}
+"""
+needle = 'JSON.parse($("snapshot").textContent)'
+assert template.count(needle) == 1
+template = template.replace(needle, 'unpackEmbeddedSnapshot(' + needle + ')')
+template = template.replace('let snapshot=unpackEmbeddedSnapshot', decoder + 'let snapshot=unpackEmbeddedSnapshot', 1)
+payload = json.dumps(embedded, ensure_ascii=False, separators=(",", ":")).replace("<", r"\u003c")
 result = template.replace("__SNAPSHOT__", payload)
 if any(x in result for x in ("/*APP*/", "/*STYLE*/", "/*LOADER*/", "/*MARKET_CAP*/",
                              "__PROJECT_ART__", "__PROJECT_BG__", "__BADGE_")):

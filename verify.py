@@ -39,6 +39,13 @@ if "rates" in snapshot:
     assert all(0 < price < 1000 for _, price in rates)
 page = (root / "index.html").read_text()
 payload = re.search(r'<script id="snapshot" type="application/json">(.*?)</script>', page, re.S)
-assert payload and json.loads(payload[1]) == snapshot
+assert payload
+embedded = json.loads(payload[1])
+for key in ("trades", "burns"):
+    part = embedded.get(key, {})
+    packed = part.pop("_packedRows", None)
+    if packed is not None:
+        part["rows"] = [dict(zip(packed["keys"], row)) for row in packed["rows"]]
+assert embedded == snapshot
 assert not any(token in page for token in ("/*APP*/", "/*STYLE*/", "/*LOADER*/", "/*MARKET_CAP*/", "__PROJECT_ART__"))
 print("Snapshot and standalone page validated.")
