@@ -93,7 +93,7 @@ def refresh() -> dict:
     stage("zeroBurns", lambda previous: observatory.zero_burns(previous, now),
           interval=6*3600)
     stage("trades", lambda previous: trades.collect(previous, now - trade_history.YEAR,
-                                                      now, max_pages=35))
+                                                      now, max_pages=180))
     if trade_history.refresh(snap, now, save=save):
         errors.add("tradeHistory")
     else:
