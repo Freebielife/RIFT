@@ -41,12 +41,27 @@ for key in ("trades", "burns"):
     rows = part.get("rows", [])
     if rows and all(isinstance(row, dict) and row.keys() == rows[0].keys() for row in rows):
         keys = list(rows[0])
-        part["_packedRows"] = {"keys": keys, "rows": [[row[k] for k in keys] for row in rows]}
+        packed = {"keys": keys, "rows": [[row[k] for k in keys] for row in rows]}
+        dictionaries = {}
+        for i, key_name in enumerate(keys):
+            values = [row[i] for row in packed["rows"]]
+            if not all(isinstance(value, str) for value in values):
+                continue
+            unique = list(dict.fromkeys(values))
+            lookup = {value: j for j, value in enumerate(unique)}
+            indices = [lookup[value] for value in values]
+            if len(json.dumps(unique, ensure_ascii=False)) + len(json.dumps(indices)) + 32 < len(json.dumps(values, ensure_ascii=False)):
+                dictionaries[str(i)] = unique
+                for row, index in zip(packed["rows"], indices):
+                    row[i] = index
+        if dictionaries:
+            packed["dicts"] = dictionaries
+        part["_packedRows"] = packed
         del part["rows"]
 decoder = """function unpackEmbeddedSnapshot(s){
 for(const key of ['trades','burns']){
  const part=s[key], p=part?._packedRows;
- if(p){part.rows=p.rows.map(row=>Object.fromEntries(p.keys.map((k,i)=>[k,row[i]])));delete part._packedRows;}
+ if(p){part.rows=p.rows.map(row=>Object.fromEntries(p.keys.map((k,i)=>[k,p.dicts?.[i] ? p.dicts[i][row[i]] : row[i]])));delete part._packedRows;}
 }
 return s;
 }

@@ -45,7 +45,8 @@ for key in ("trades", "burns"):
     part = embedded.get(key, {})
     packed = part.pop("_packedRows", None)
     if packed is not None:
-        part["rows"] = [dict(zip(packed["keys"], row)) for row in packed["rows"]]
+        dictionaries = packed.get("dicts", {})
+        part["rows"] = [dict(zip(packed["keys"], [dictionaries[str(i)][value] if str(i) in dictionaries else value for i, value in enumerate(row)])) for row in packed["rows"]]
 assert embedded == snapshot
 assert not any(token in page for token in ("/*APP*/", "/*STYLE*/", "/*LOADER*/", "/*MARKET_CAP*/", "__PROJECT_ART__"))
 print("Snapshot and standalone page validated.")
