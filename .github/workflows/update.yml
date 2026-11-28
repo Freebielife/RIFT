@@ -36,9 +36,20 @@ jobs:
         run: python3 -m scripts.refresh_observatory
       - name: Build and publish verified snapshot
         run: |
-          python3 build.py
-          python3 verify.py
-          python3 scripts/publish_snapshot.py
+          if python3 build.py && python3 verify.py; then
+            python3 scripts/publish_snapshot.py
+          else
+            echo "::warning::HTML build failed; publishing validated market snapshot independently"
+            python3 -c 'import json; from pathlib import Path; from scripts.project_runtime import read_project, check_identity; root=Path("."); check_identity(json.loads((root/"data/snapshot.json").read_text()), read_project(root))'
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- data/snapshot.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Refresh market snapshot independently of HTML"
+              git push origin HEAD:refs/heads/main
+            fi
+            exit 1
+          fi
       - name: Report partial collection
         if: steps.collect.outcome == 'failure'
         run: exit 1
